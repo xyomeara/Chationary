@@ -1,24 +1,36 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import io from 'socket.io-client';
 
-let socket;
+// let socket;
+// why do I have to initialize socket here first??????
 const endpoint = 'localhost:8080';
 
 const useSocket = (name, room) => {
   const [messages, setMessages] = useState([]);
   const [typeMsg, setTypeMsg] = useState(``);
   const [users, setUsers] = useState([]);
+  const socketRef = useRef('');
+
+  console.log(
+    'socketRef.current before initialize socket => ',
+    socketRef.current
+  );
 
   useEffect(() => {
     console.log('useEffect fired!');
 
     // Creates a WebSocket connection
-    socket = io(endpoint, {
+    socketRef.current = io(endpoint, {
       query: { name, room },
     });
 
+    console.log(
+      'socketRef.current after initialize socket => ',
+      socketRef.current
+    );
+
     // Listens for incoming messages
-    socket.on('message', (message) => {
+    socketRef.current.on('message', (message) => {
       // setTypeMsg('');
       console.log(message);
       // if (
@@ -32,14 +44,14 @@ const useSocket = (name, room) => {
       //   setUsers((users) => [...users, newUser]);
       // }
       setMessages((messages) => [...messages, message]);
-      // why can't we use setMessages([...messages, message])???
+      // why can't we use setMessages([...messages, message])????????????
     });
 
-    socket.on('roomData', ({ users }) => {
+    socketRef.current.on('roomData', ({ users }) => {
       setUsers(users);
     });
 
-    socket.on('sendTypingMsg', (data) => {
+    socketRef.current.on('sendTypingMsg', (data) => {
       // console.log(message);
       setTypeMsg(data);
       setTimeout(() => {
@@ -50,16 +62,17 @@ const useSocket = (name, room) => {
     // Destroys the socket reference
     // when the connection is closed
     return () => {
-      socket.close();
+      socketRef.current.close();
     };
+    // should we can name out??????
   }, [name, room]);
 
   // client sends a message to the server
   // Server forwards it to all users in the same room
   const sendNewMessage = (newMessage) => {
     if (newMessage) {
-      socket.emit('sendNewMessage', {
-        id: socket.id,
+      socketRef.current.emit('sendNewMessage', {
+        id: socketRef.current.id,
         broadcaster: name,
         name,
         room,
@@ -69,7 +82,7 @@ const useSocket = (name, room) => {
   };
 
   const sendTypingMsg = () => {
-    socket.emit('sendTypingMsg', `${name} is typing...`);
+    socketRef.current.emit('sendTypingMsg', `${name} is typing...`);
   };
 
   return [messages, typeMsg, users, sendNewMessage, sendTypingMsg];

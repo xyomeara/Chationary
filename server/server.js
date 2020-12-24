@@ -132,10 +132,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     const user = removeUser(socket.id);
 
-    socket.leave(room);
+    socket.leave(user.room);
 
     // broadcast message to all users in the room except the user who just left
-    socket.to(room).emit('message', {
+    socket.to(user.room).emit('message', {
       id: socket.id,
       broadcaster: 'Admin',
       name,
