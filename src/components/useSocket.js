@@ -21,10 +21,11 @@ const useSocket = (name, room) => {
       // setTypeMsg('');
       // console.log(message);
       setMessages((messages) => [...messages, message]);
+      // why can't we use setMessages([...messages, message])???
     });
     // console.log('receiving message from the backend socket');
 
-    socket.on('typingMsg', (data) => {
+    socket.on('sendTypingMsg', (data) => {
       // console.log(message);
       setTypeMsg(data);
       setTimeout(() => {
@@ -53,7 +54,7 @@ const useSocket = (name, room) => {
   };
 
   const sendTypingMsg = () => {
-    socket.emit('typing', `${name} is typing...`);
+    socket.emit('sendTypingMsg', `${name} is typing...`);
   };
 
   return [messages, typeMsg, sendNewMessage, sendTypingMsg];

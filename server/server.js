@@ -97,9 +97,9 @@ io.on('connection', (socket) => {
     io.in(room).emit('message', message);
   });
 
-  socket.on('typing', (data) => {
-    console.log('data-->', data);
-    socket.to(room).emit('typingMsg', data);
+  socket.on('sendTypingMsg', (data) => {
+    // console.log('data-->', data);
+    socket.to(room).emit('sendTypingMsg', data);
     //socket.broadcast.to().emit has the same effect!!!
   });
 
