@@ -7,6 +7,7 @@ const endpoint = 'localhost:8080';
 const useSocket = (name, room) => {
   const [messages, setMessages] = useState([]);
   const [typeMsg, setTypeMsg] = useState(``);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     console.log('useEffect fired!');
@@ -19,7 +20,12 @@ const useSocket = (name, room) => {
     // Listens for incoming messages
     socket.on('message', (message) => {
       // setTypeMsg('');
-      // console.log(message);
+      console.log(message);
+      if (message.text === `${name}, welcome to ${room} chatroom.`) {
+        console.log('jjjjjoin');
+      } else if (message.name === 'Admin') {
+        console.log('lllllleave');
+      }
       setMessages((messages) => [...messages, message]);
       // why can't we use setMessages([...messages, message])???
     });
@@ -46,6 +52,7 @@ const useSocket = (name, room) => {
     if (newMessage) {
       socket.emit('sendNewMessage', {
         id: socket.id,
+        broadcaster: name,
         name,
         room,
         text: newMessage,
@@ -57,7 +64,7 @@ const useSocket = (name, room) => {
     socket.emit('sendTypingMsg', `${name} is typing...`);
   };
 
-  return [messages, typeMsg, sendNewMessage, sendTypingMsg];
+  return [messages, typeMsg, users, sendNewMessage, sendTypingMsg];
 };
 
 export default useSocket;

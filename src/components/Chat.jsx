@@ -7,12 +7,13 @@ import useSocket from './useSocket';
 const Chat = ({ match }) => {
   const { name, room } = match.params;
   // console.log(match.params);
-  const [messages, typeMsg, sendNewMessage, sendTypingMsg] = useSocket(
+  const [messages, typeMsg, users, sendNewMessage, sendTypingMsg] = useSocket(
     name,
     room
   );
 
   console.log('the messages:', messages);
+  console.log('users:', users);
 
   return (
     <div className="chatOuterContainer">

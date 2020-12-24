@@ -81,14 +81,16 @@ io.on('connection', (socket) => {
 
   socket.emit('message', {
     id: socket.id,
-    name: 'Admin',
+    broadcaster: 'Admin',
+    name,
     room,
     text: `${name}, welcome to ${room} chatroom.`,
   });
 
   socket.to(room).emit('message', {
     id: socket.id,
-    name: 'Admin',
+    broadcaster: 'Admin',
+    name,
     room,
     text: `${name} has joined!`,
   });
@@ -107,7 +109,8 @@ io.on('connection', (socket) => {
     socket.leave(room);
     socket.to(room).emit('message', {
       id: socket.id,
-      name: 'Admin',
+      broadcaster: 'Admin',
+      name,
       room,
       text: `${name} has left!`,
     });

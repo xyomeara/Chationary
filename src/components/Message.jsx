@@ -5,19 +5,19 @@ const Message = ({ message, name }) => {
   // console.log('Message Component props.messages.name =>', message.name);
   // console.log('Message Component props.name =>', name);
 
-  return message.name === name ? (
-    <div className='message flexstart'>
-      <p className='sentTextUser'>{message.name}</p>
-      <div className='textBox'>
-        <p className='text pr'>{message.text}</p>
+  return message.broadcaster === name ? (
+    <div className="message flexstart">
+      <p className="sentTextUser">{message.broadcaster}</p>
+      <div className="textBox">
+        <p className="text pr">{message.text}</p>
       </div>
     </div>
   ) : (
-    <div className='message flexend'>
-      <div className='textBox lt'>
-        <p className='text dk'>{message.text}</p>
+    <div className="message flexend">
+      <div className="textBox lt">
+        <p className="text dk">{message.text}</p>
       </div>
-      <p className='sentTextUser pl'>{message.name}</p>
+      <p className="sentTextUser pl">{message.broadcaster}</p>
     </div>
   );
 };
