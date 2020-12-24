@@ -21,15 +21,23 @@ const useSocket = (name, room) => {
     socket.on('message', (message) => {
       // setTypeMsg('');
       console.log(message);
-      if (message.text === `${name}, welcome to ${room} chatroom.`) {
-        console.log('jjjjjoin');
-      } else if (message.name === 'Admin') {
-        console.log('lllllleave');
-      }
+      // if (
+      //   message.broadcaster === 'Admin' &&
+      //   (message.text.includes('welcome to') ||
+      //     message.text.includes('has joined!'))
+      // ) {
+      //   console.log('newUser join!!!!!!!!!');
+      //   const newUser = { ...message };
+      //   delete newUser.text;
+      //   setUsers((users) => [...users, newUser]);
+      // }
       setMessages((messages) => [...messages, message]);
       // why can't we use setMessages([...messages, message])???
     });
-    // console.log('receiving message from the backend socket');
+
+    socket.on('roomData', ({ users }) => {
+      setUsers(users);
+    });
 
     socket.on('sendTypingMsg', (data) => {
       // console.log(message);

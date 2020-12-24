@@ -2,6 +2,7 @@ import React from 'react';
 import Messages from './Messages';
 import InfoBar from './InfoBar';
 import InputBox from './InputBox';
+import UsersDisplay from './UsersDisplay';
 import useSocket from './useSocket';
 
 const Chat = ({ match }) => {
@@ -20,8 +21,12 @@ const Chat = ({ match }) => {
       <div className="chatInnerContainer">
         <InfoBar room={room} />
         <Messages messages={messages} name={name} typeMsg={typeMsg} />
-        <InputBox sendNewMessage={sendNewMessage} sendTypingMsg={sendTypingMsg} />
+        <InputBox
+          sendNewMessage={sendNewMessage}
+          sendTypingMsg={sendTypingMsg}
+        />
       </div>
+      <UsersDisplay users={users} />
     </div>
   );
 };

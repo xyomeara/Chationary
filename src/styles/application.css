@@ -4,7 +4,8 @@
 @import '_InfoBar';
 @import '_Messages';
 @import '_Message';
-@import '_inputBox';
+@import '_InputBox';
+@import '_UsersDisplay';
 
 * {
   box-sizing: border-box;

@@ -70,6 +70,21 @@ const server = app.listen(PORT, () => {
  */
 const socketio = require('socket.io');
 const io = socketio(server);
+const users = [];
+
+const addUser = ({ id, name, room }) => {
+  const user = { id, name, room };
+  users.push(user);
+  return user;
+};
+
+const getUsersInRoom = (room) => users.filter((user) => user.room === room);
+
+const removeUser = (id) => {
+  const index = users.findIndex((user) => user.id === id);
+
+  if (index !== -1) return users.splice(index, 1)[0];
+};
 
 io.on('connection', (socket) => {
   console.log('socket.id => ', socket.id);
@@ -79,6 +94,7 @@ io.on('connection', (socket) => {
   socket.join(room);
   console.log('After joining room => ', socket.rooms);
 
+  // send message to user who just joined
   socket.emit('message', {
     id: socket.id,
     broadcaster: 'Admin',
@@ -87,6 +103,7 @@ io.on('connection', (socket) => {
     text: `${name}, welcome to ${room} chatroom.`,
   });
 
+  // broadcast message to all users in the room except the user who just joined
   socket.to(room).emit('message', {
     id: socket.id,
     broadcaster: 'Admin',
@@ -95,8 +112,15 @@ io.on('connection', (socket) => {
     text: `${name} has joined!`,
   });
 
+  const user = addUser({ id: socket.id, name, room });
+  // send message to all users in the room
+  io.to(user.room).emit('roomData', {
+    room: user.room,
+    users: getUsersInRoom(user.room),
+  });
+
   socket.on('sendNewMessage', (message) => {
-    io.in(room).emit('message', message);
+    io.to(room).emit('message', message);
   });
 
   socket.on('sendTypingMsg', (data) => {
@@ -106,7 +130,11 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
+    const user = removeUser(socket.id);
+
     socket.leave(room);
+
+    // broadcast message to all users in the room except the user who just left
     socket.to(room).emit('message', {
       id: socket.id,
       broadcaster: 'Admin',
@@ -114,6 +142,13 @@ io.on('connection', (socket) => {
       room,
       text: `${name} has left!`,
     });
+
+    // broadcast message to all users in the room except the user who just left
+    socket.to(user.room).emit('roomData', {
+      room: user.room,
+      users: getUsersInRoom(user.room),
+    });
+
     console.log(name, ' has left ', room, ' chatroom!');
   });
 });
