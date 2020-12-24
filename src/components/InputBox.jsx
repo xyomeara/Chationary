@@ -1,7 +1,7 @@
 import React from 'react';
 import useInputState from './useInputState';
 
-const InputBox = ({ sendNewMessage, setTypingMsg }) => {
+const InputBox = ({ sendNewMessage, sendTypingMsg }) => {
   //added customized hook
   const [newMessage, handleNewMessage, reset] = useInputState('');
 
@@ -9,12 +9,12 @@ const InputBox = ({ sendNewMessage, setTypingMsg }) => {
     if (e.key === 'Enter') {
       handleSendMessage(e);
     } else {
-      setTypingMsg();
+      sendTypingMsg();
     }
   };
 
   const handleSendMessage = (e) => {
-    console.log('handleSendMessage!');
+    // console.log('handleSendMessage!');
     e.preventDefault();
     sendNewMessage(newMessage);
     //calling reset in the customized hook to set input to ''

@@ -7,7 +7,7 @@ import useSocket from './useSocket';
 const Chat = ({ match }) => {
   const { name, room } = match.params;
   // console.log(match.params);
-  const [messages, typeMsg, sendNewMessage, setTypingMsg] = useSocket(
+  const [messages, typeMsg, sendNewMessage, sendTypingMsg] = useSocket(
     name,
     room
   );
@@ -19,7 +19,7 @@ const Chat = ({ match }) => {
       <div className="chatInnerContainer">
         <InfoBar room={room} />
         <Messages messages={messages} name={name} typeMsg={typeMsg} />
-        <InputBox sendNewMessage={sendNewMessage} setTypingMsg={setTypingMsg} />
+        <InputBox sendNewMessage={sendNewMessage} sendTypingMsg={sendTypingMsg} />
       </div>
     </div>
   );

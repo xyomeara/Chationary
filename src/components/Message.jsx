@@ -2,7 +2,7 @@ import React from 'react';
 
 const Message = ({ message, name }) => {
   // console.log('Message Component props.messages.text =>', message.text);
-  // console.log('Message Component props.messages.user =>', message.user);
+  // console.log('Message Component props.messages.name =>', message.name);
   // console.log('Message Component props.name =>', name);
 
   return message.name === name ? (
