@@ -12,21 +12,14 @@ const Chat = ({ match }) => {
     room
   );
 
-  //console.log(setTypingMsg);
-  // const [newMessage, setNewMessage] = useState('');
+  console.log('the messages:', messages);
 
   return (
-    <div className='chatOuterContainer'>
-      <div className='chatInnerContainer'>
+    <div className="chatOuterContainer">
+      <div className="chatInnerContainer">
         <InfoBar room={room} />
         <Messages messages={messages} name={name} typeMsg={typeMsg} />
-        <InputBox
-          // room={room}
-          // newMessage={newMessage}
-          // setNewMessage={setNewMessage}
-          sendNewMessage={sendNewMessage}
-          setTypingMsg={setTypingMsg}
-        />
+        <InputBox sendNewMessage={sendNewMessage} setTypingMsg={setTypingMsg} />
       </div>
     </div>
   );

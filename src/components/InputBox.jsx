@@ -1,12 +1,7 @@
 import React from 'react';
 import useInputState from './useInputState';
 
-const InputBox = ({
-  // newMessage,
-  // setNewMessage,
-  sendNewMessage,
-  setTypingMsg,
-}) => {
+const InputBox = ({ sendNewMessage, setTypingMsg }) => {
   //added customized hook
   const [newMessage, handleNewMessage, reset] = useInputState('');
 
@@ -27,16 +22,16 @@ const InputBox = ({
   };
 
   return (
-    <div className='form'>
+    <div className="form">
       <input
-        className='inputBox'
-        type='text'
-        placeholder='Type a message...'
+        className="inputBox"
+        type="text"
+        placeholder="Type a message..."
         value={newMessage}
         onChange={handleNewMessage}
         onKeyPress={handleKeyPress}
       />
-      <button className='sendButton' onClick={handleSendMessage}>
+      <button className="sendButton" onClick={handleSendMessage}>
         Send
       </button>
     </div>
