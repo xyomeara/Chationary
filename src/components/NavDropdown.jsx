@@ -5,7 +5,7 @@ import { Chatrooms } from './Chatrooms';
 export default function NavDropdown() {
   const rooms = Chatrooms.map((room, idx) => {
     return (
-      <div className="NavDropdown" key={`room${idx}`}>
+      <div className="NavDropdown" key={`room-${idx}`}>
         <Link to={room.link} style={{ textDecoration: 'none' }}>
           {room.roomName}
         </Link>

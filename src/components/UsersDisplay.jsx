@@ -1,22 +1,24 @@
 import React from 'react';
 
-const UsersDisplay = ({ users }) => (
-  <div className="userDisplay">
-    {users ? (
+const UsersDisplay = ({ users }) => {
+  console.log('users in UserDisplay Component => ', users);
+  return (
+    <div className="userDisplay">
       <div>
-        <h2>People currently chatting:</h2>
+        <h3>People currently chatting:</h3>
         <div className="activeUsers">
-          <h3>
+          <h4>
             {users.map(({ name }, i) => (
               <div key={`name-${i}`} className="activeItem">
+                <img alt="Online Icon" src="/assets/images/onlineIcon.png" />
                 {name}
               </div>
             ))}
-          </h3>
+          </h4>
         </div>
       </div>
-    ) : null}
-  </div>
-);
+    </div>
+  );
+};
 
 export default UsersDisplay;

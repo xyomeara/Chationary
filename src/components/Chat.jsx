@@ -13,8 +13,8 @@ const Chat = ({ match }) => {
     room
   );
 
-  console.log('the messages:', messages);
-  console.log('users:', users);
+  console.log('messages in Chat Component => ', messages);
+  // console.log('users in Chat Component => ', users);
 
   return (
     <div className="chatOuterContainer">

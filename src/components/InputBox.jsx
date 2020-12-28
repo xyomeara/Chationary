@@ -6,6 +6,7 @@ const InputBox = ({ sendNewMessage, sendTypingMsg }) => {
   const [newMessage, handleNewMessage, reset] = useInputState('');
 
   const handleKeyPress = (e) => {
+    // console.log("e.key => ", e.key);
     if (e.key === 'Enter') {
       handleSendMessage(e);
     } else {

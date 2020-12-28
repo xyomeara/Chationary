@@ -7,14 +7,14 @@ const endpoint = 'localhost:8080';
 
 const useSocket = (name, room) => {
   const [messages, setMessages] = useState([]);
-  const [typeMsg, setTypeMsg] = useState(``);
+  const [typeMsg, setTypeMsg] = useState('');
   const [users, setUsers] = useState([]);
   const socketRef = useRef('');
 
-  console.log(
-    'socketRef.current before initialize socket => ',
-    socketRef.current
-  );
+  // console.log(
+  //   'socketRef.current before initialize socket => ',
+  //   socketRef.current
+  // );
 
   useEffect(() => {
     console.log('useEffect fired!');
@@ -24,26 +24,25 @@ const useSocket = (name, room) => {
       query: { name, room },
     });
 
-    console.log(
-      'socketRef.current after initialize socket => ',
-      socketRef.current
-    );
+    // console.log(
+    //   'socketRef.current after initialize socket => ',
+    //   socketRef.current
+    // );
 
     // Listens for incoming messages
     socketRef.current.on('message', (message) => {
       // setTypeMsg('');
-      console.log(message);
-      // if (
-      //   message.broadcaster === 'Admin' &&
-      //   (message.text.includes('welcome to') ||
-      //     message.text.includes('has joined!'))
-      // ) {
-      //   console.log('newUser join!!!!!!!!!');
-      //   const newUser = { ...message };
-      //   delete newUser.text;
-      //   setUsers((users) => [...users, newUser]);
-      // }
-      setMessages((messages) => [...messages, message]);
+      console.log('messages in useSocket => ', messages);
+
+      console.log(
+        'socket in useSocket listens for incoming messages => ',
+        message
+      );
+
+      setMessages((messages) => {
+        console.log("messages inside of setMessages => ", messages)
+        return [...messages, message]
+      });
       // why can't we use setMessages([...messages, message])????????????
     });
 
@@ -52,8 +51,8 @@ const useSocket = (name, room) => {
     });
 
     socketRef.current.on('sendTypingMsg', (data) => {
-      // console.log(message);
       setTypeMsg(data);
+
       setTimeout(() => {
         setTypeMsg('');
       }, 1000);
@@ -64,7 +63,6 @@ const useSocket = (name, room) => {
     return () => {
       socketRef.current.close();
     };
-    // should we can name out??????
   }, [name, room]);
 
   // client sends a message to the server
@@ -73,7 +71,7 @@ const useSocket = (name, room) => {
     if (newMessage) {
       socketRef.current.emit('sendNewMessage', {
         id: socketRef.current.id,
-        broadcaster: name,
+        emitter: name,
         name,
         room,
         text: newMessage,

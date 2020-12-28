@@ -1,13 +1,10 @@
 import React from 'react';
 
 const Message = ({ message, name }) => {
-  // console.log('Message Component props.messages.text =>', message.text);
-  // console.log('Message Component props.messages.name =>', message.name);
-  // console.log('Message Component props.name =>', name);
 
-  return message.broadcaster === name ? (
+  return message.emitter === name ? (
     <div className="message flexstart">
-      <p className="sentTextUser">{message.broadcaster}</p>
+      <p className="sentTextUser">{message.emitter}</p>
       <div className="textBox">
         <p className="text pr">{message.text}</p>
       </div>
@@ -17,7 +14,7 @@ const Message = ({ message, name }) => {
       <div className="textBox lt">
         <p className="text dk">{message.text}</p>
       </div>
-      <p className="sentTextUser pl">{message.broadcaster}</p>
+      <p className="sentTextUser pl">{message.emitter}</p>
     </div>
   );
 };

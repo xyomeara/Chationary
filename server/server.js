@@ -72,10 +72,8 @@ const socketio = require('socket.io');
 const io = socketio(server);
 const users = [];
 
-const addUser = ({ id, name, room }) => {
-  const user = { id, name, room };
+const addUser = (user) => {
   users.push(user);
-  return user;
 };
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room);
@@ -83,21 +81,22 @@ const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 const removeUser = (id) => {
   const index = users.findIndex((user) => user.id === id);
 
-  if (index !== -1) return users.splice(index, 1)[0];
+  if (index !== -1) users.splice(index, 1);
 };
 
 io.on('connection', (socket) => {
-  console.log('socket.id => ', socket.id);
+  // console.log('socket.id => ', socket.id);
   const { name, room } = socket.handshake.query;
 
   console.log('before joining room => socket.rooms => ', socket.rooms);
   socket.join(room);
   console.log('After joining room => ', socket.rooms);
+  console.log(name, ' has joined ', room, ' chatroom!');
 
   // send message to user who just joined
   socket.emit('message', {
     id: socket.id,
-    broadcaster: 'Admin',
+    emitter: 'Admin',
     name,
     room,
     text: `${name}, welcome to ${room} chatroom.`,
@@ -106,47 +105,52 @@ io.on('connection', (socket) => {
   // broadcast message to all users in the room except the user who just joined
   socket.to(room).emit('message', {
     id: socket.id,
-    broadcaster: 'Admin',
+    emitter: 'Admin',
     name,
     room,
     text: `${name} has joined!`,
   });
 
-  const user = addUser({ id: socket.id, name, room });
+  addUser({ id: socket.id, name, room });
   // send message to all users in the room
-  io.to(user.room).emit('roomData', {
-    room: user.room,
-    users: getUsersInRoom(user.room),
+  io.to(room).emit('roomData', {
+    users: getUsersInRoom(room),
   });
 
+  // console.log('outside of sendNewMessage room => ', room);
+
   socket.on('sendNewMessage', (message) => {
+    // console.log('message => ', message);
+    // console.log('room => ', room);
+    // broadcast message to all users in the room
     io.to(room).emit('message', message);
   });
 
   socket.on('sendTypingMsg', (data) => {
     // console.log('data-->', data);
+
+    // broadcast message to all users in the room except the user who is typing
     socket.to(room).emit('sendTypingMsg', data);
     //socket.broadcast.to().emit has the same effect!!!
   });
 
   socket.on('disconnect', () => {
-    const user = removeUser(socket.id);
+    removeUser(socket.id);
 
-    socket.leave(user.room);
+    socket.leave(room);
 
     // broadcast message to all users in the room except the user who just left
-    socket.to(user.room).emit('message', {
+    socket.to(room).emit('message', {
       id: socket.id,
-      broadcaster: 'Admin',
+      emitter: 'Admin',
       name,
       room,
       text: `${name} has left!`,
     });
 
     // broadcast message to all users in the room except the user who just left
-    socket.to(user.room).emit('roomData', {
-      room: user.room,
-      users: getUsersInRoom(user.room),
+    socket.to(room).emit('roomData', {
+      users: getUsersInRoom(room),
     });
 
     console.log(name, ' has left ', room, ' chatroom!');

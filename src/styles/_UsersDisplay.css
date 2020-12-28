@@ -18,7 +18,11 @@
   align-items: center;
 }
 
-.userDisplay h2 {
+.activeUsers img {
+  padding-right: 10px;
+}
+
+.userDisplay h3 {
   margin-bottom: 0px;
 }
 
